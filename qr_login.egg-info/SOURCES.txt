@@ -1,0 +1,16 @@
+MANIFEST.in
+requirements.txt
+setup.py
+qr_login/__init__.py
+qr_login/api.py
+qr_login/hooks.py
+qr_login/modules.txt
+qr_login.egg-info/PKG-INFO
+qr_login.egg-info/SOURCES.txt
+qr_login.egg-info/dependency_links.txt
+qr_login.egg-info/not-zip-safe
+qr_login.egg-info/requires.txt
+qr_login.egg-info/top_level.txt
+qr_login/public/css/qr_login.css
+qr_login/public/js/qr_login.js
+qr_login/qr_login/__init__.py

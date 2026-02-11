@@ -1,0 +1,73 @@
+/* QR Login section on the Frappe login page */
+
+.qr-login-divider {
+	display: flex;
+	align-items: center;
+	text-align: center;
+	margin: 20px auto 10px;
+	max-width: 320px;
+}
+
+.qr-login-divider::before,
+.qr-login-divider::after {
+	content: "";
+	flex: 1;
+	border-bottom: 1px solid var(--gray-300, #d1d8dd);
+}
+
+.qr-login-divider span {
+	padding: 0 12px;
+	color: var(--text-muted, #8d99a6);
+	font-size: var(--text-sm, 12px);
+	text-transform: uppercase;
+}
+
+.qr-login-section {
+	text-align: center;
+	padding: 15px 10px 20px;
+	max-width: 320px;
+	margin: 0 auto;
+}
+
+#qr-login-img {
+	width: 200px;
+	height: 200px;
+	border: 1px solid var(--gray-200, #e9ecef);
+	border-radius: var(--border-radius, 4px);
+	padding: 4px;
+	background: #fff;
+}
+
+.qr-login-label {
+	color: var(--text-muted, #8d99a6);
+	font-size: var(--text-sm, 12px);
+	margin-top: 10px;
+	margin-bottom: 4px;
+}
+
+.qr-login-timer {
+	color: var(--text-muted, #8d99a6);
+	font-size: var(--text-xs, 11px);
+	margin-bottom: 8px;
+}
+
+.qr-login-loading {
+	padding: 40px 0;
+}
+
+.qr-login-loading p {
+	color: var(--text-muted, #8d99a6);
+	font-size: var(--text-sm, 12px);
+}
+
+.qr-login-refresh {
+	margin-top: 8px;
+}
+
+/* Responsive: smaller QR on small screens */
+@media (max-width: 480px) {
+	#qr-login-img {
+		width: 160px;
+		height: 160px;
+	}
+}
