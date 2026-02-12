@@ -1,7 +1,7 @@
 app_name = "qr_login"
 app_title = "QR Login"
 app_publisher = "Filip Ilic"
-app_description = "QR code-based login for Frappe — scan from mobile app to log in on web"
+app_description = "QR login app for frappe. Just scan with your mobile phone and login."
 app_icon = "octicon octicon-key"
 app_color = "blue"
 app_email = "filip@filipilic.com"

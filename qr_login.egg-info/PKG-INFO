@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: qr_login
 Version: 0.1.0
-Summary: QR code-based login for Frappe — scan from mobile app to log in on web
+Summary: QR login app for frappe. Just scan with your mobile phone and login.
 Author: Filip Ilic
 Author-email: filip@filipilic.com
 Requires-Dist: frappe
