@@ -1,9 +1,13 @@
-// QR session killswitch — non-blocking side panel on the desk.
-// Flow: QR-born session → ask "izloguj me nakon 5/15/30 min" → at deadline
-// show 5s countdown → show QR, 10s to rescan (continues via a fresh QR
-// login) → otherwise logout. Server enforces the deadline via auth_hooks,
-// this script is only the UX.
+// QR session killswitch on the desk.
+// Flow: QR-born session → non-blocking corner panel "izloguj me nakon
+// 5/15/30 min" → near the deadline a big centered modal warns, then shows a
+// large QR to rescan (continues via a fresh QR login) → otherwise logout.
+// Server enforces the deadline via auth_hooks; this script is only the UX.
+// Keep WARNING/RESCAN in sync with KILLSWITCH_GRACE_SECONDS on the server.
 (function () {
+	var WARNING_SECONDS = 10; // heads-up countdown before the deadline
+	var RESCAN_SECONDS = 25; // window to scan the continue-QR after the deadline
+
 	var deadline = null; // epoch ms
 	var qrDeadline = null; // epoch ms, rescan window
 	var phase = "idle"; // idle | chooser | armed | warning | qr | done
@@ -43,6 +47,35 @@
 	function removePanel() {
 		var p = document.getElementById("qr-killswitch");
 		if (p) p.remove();
+	}
+
+	// Big centered modal used for the warning + continue-QR (blocking on
+	// purpose: the session is about to end, they need to act). Returns the
+	// inner card so callers can set its content.
+	function modalCard() {
+		var m = document.getElementById("qr-killswitch-modal");
+		if (!m) {
+			m = document.createElement("div");
+			m.id = "qr-killswitch-modal";
+			m.style.cssText =
+				"position:fixed;inset:0;z-index:100000;display:flex;" +
+				"align-items:center;justify-content:center;" +
+				"background:rgba(0,0,0,.55);";
+			var card = document.createElement("div");
+			card.id = "qr-killswitch-card";
+			card.style.cssText =
+				"background:var(--card-bg,#fff);color:var(--text-color,#1f272e);" +
+				"border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.35);" +
+				"padding:28px 32px;max-width:360px;text-align:center;";
+			m.appendChild(card);
+			document.body.appendChild(m);
+		}
+		return document.getElementById("qr-killswitch-card");
+	}
+
+	function removeModal() {
+		var m = document.getElementById("qr-killswitch-modal");
+		if (m) m.remove();
 	}
 
 	function showChooser() {
@@ -88,15 +121,13 @@
 	function tick() {
 		var rem = deadline - Date.now();
 
-		if (phase === "armed" && rem <= 5000) {
+		if (phase === "armed" && rem <= WARNING_SECONDS * 1000) {
 			phase = "warning";
 		}
 
 		if (phase === "warning") {
 			if (rem > 0) {
-				panel().innerHTML =
-					'<div style="font-weight:600;color:var(--red-500,#c00);">' +
-					"Odjava za " + Math.ceil(rem / 1000) + "s</div>";
+				showWarning(Math.ceil(rem / 1000));
 			} else {
 				showQR();
 			}
@@ -110,20 +141,39 @@
 		}
 	}
 
+	function showWarning(secs) {
+		var card = modalCard();
+		// build once, then just update the number so the countdown doesn't flicker
+		if (!document.getElementById("qr-ks-warn-secs")) {
+			card.innerHTML =
+				'<div style="font-size:44px;margin-bottom:6px;">⏳</div>' +
+				'<div style="font-size:19px;font-weight:700;margin-bottom:6px;">Sesija samo što nije istekla</div>' +
+				'<div style="color:var(--text-muted,#8d99a6);margin-bottom:16px;">Pripremite telefon da nastavite sesiju</div>' +
+				'<div style="font-size:15px;">Nastavak za ' +
+				'<span id="qr-ks-warn-secs" style="font-weight:700;font-size:22px;color:var(--primary,#2490ef);"></span></div>';
+		}
+		document.getElementById("qr-ks-warn-secs").textContent = secs + "s";
+	}
+
 	function showQR() {
 		phase = "qr";
-		var p = panel();
-		p.innerHTML = '<div style="font-weight:600;margin-bottom:6px;">Skeniraj za nastavak</div>';
+		var card = modalCard();
+		card.innerHTML =
+			'<div style="font-size:19px;font-weight:700;margin-bottom:4px;">Nastavi sesiju</div>' +
+			'<div style="color:var(--text-muted,#8d99a6);">Učitavanje koda…</div>';
 
 		frappe
 			.xcall("qr_login.api.generate_token")
 			.then(function (data) {
 				if (phase !== "qr" || !data || !data.qr_image) return logout();
-				qrDeadline = Date.now() + 10000;
-				p.innerHTML =
-					'<div style="font-weight:600;margin-bottom:6px;">Skeniraj za nastavak</div>' +
-					'<img src="' + data.qr_image + '" style="width:160px;height:160px;" />' +
-					'<div style="margin-top:6px;">Odjava za <span id="qr-killswitch-timer">10s</span></div>';
+				qrDeadline = Date.now() + RESCAN_SECONDS * 1000;
+				card.innerHTML =
+					'<div style="font-size:19px;font-weight:700;margin-bottom:4px;">Nastavi sesiju</div>' +
+					'<div style="color:var(--text-muted,#8d99a6);margin-bottom:16px;">Skenirajte kod telefonom da nastavite</div>' +
+					'<img src="' + data.qr_image + '" style="width:260px;height:260px;" />' +
+					'<div style="margin-top:16px;font-size:15px;">Odjava za ' +
+					'<span id="qr-killswitch-timer" style="font-weight:700;color:var(--red-500,#e24c4c);">' +
+					RESCAN_SECONDS + 's</span></div>';
 				startPolling(data.token);
 			})
 			.catch(logout);
@@ -137,6 +187,7 @@
 					if (data && data.status === "confirmed" && data.login_token) {
 						phase = "done";
 						cleanup();
+						removeModal();
 						// fresh session via the standard QR flow; new session asks again
 						window.location.href =
 							"/api/method/frappe.www.login.login_via_token?login_token=" +
@@ -152,7 +203,19 @@
 		phase = "done";
 		cleanup();
 		removePanel();
-		window.location.href = "/api/method/logout";
+		removeModal();
+		// Proper logout that ends on the login page. callback+error both
+		// redirect, so an already-killed session still lands cleanly instead
+		// of dumping raw JSON from /api/method/logout.
+		frappe.call({
+			method: "logout",
+			callback: function () {
+				window.location.href = "/login";
+			},
+			error: function () {
+				window.location.href = "/login";
+			},
+		});
 	}
 
 	function cleanup() {

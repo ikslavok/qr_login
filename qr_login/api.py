@@ -113,8 +113,10 @@ def confirm_login(token):
 # --- Session killswitch (auto-logout timer for QR-born sessions) ---
 
 KILLSWITCH_OPTIONS = (5, 15, 30)  # minutes
-# client needs 5s warning + 10s QR-rescan window after the deadline
-KILLSWITCH_GRACE_SECONDS = 20
+# after the deadline the client shows a 25s QR-rescan window; keep grace a bit
+# above it so the desk's own requests don't 401 mid-window (must stay in sync
+# with RESCAN_SECONDS in qr_killswitch.js)
+KILLSWITCH_GRACE_SECONDS = 35
 
 
 def _killswitch_key(sid):
