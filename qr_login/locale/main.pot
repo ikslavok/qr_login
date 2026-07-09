@@ -1,0 +1,53 @@
+# Translations template for QR Login.
+# Copyright (C) 2026 Filip Ilic
+# This file is distributed under the same license as the QR Login project.
+# FIRST AUTHOR <filip@filipilic.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: QR Login VERSION\n"
+"Report-Msgid-Bugs-To: filip@filipilic.com\n"
+"POT-Creation-Date: 2026-02-12 00:00+0000\n"
+"PO-Revision-Date: 2026-02-12 00:00+0000\n"
+"Last-Translator: filip@filipilic.com\n"
+"Language-Team: filip@filipilic.com\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.1\n"
+
+#: qr_login/api.py:46 qr_login/api.py:69
+msgid "Invalid token"
+msgstr ""
+
+#: qr_login/api.py:73
+msgid "QR code has expired. Please scan a new one."
+msgstr ""
+
+#: qr_login/api.py:78
+msgid "This QR code has already been used."
+msgstr ""
+
+#: qr_login/public/js/qr_login.js:19
+msgid "or"
+msgstr ""
+
+#: qr_login/public/js/qr_login.js:22
+msgid "Loading QR code..."
+msgstr ""
+
+#: qr_login/public/js/qr_login.js:25
+msgid "Scan with mobile app to log in"
+msgstr ""
+
+#: qr_login/public/js/qr_login.js:27
+msgid "Expires in"
+msgstr ""
+
+#: qr_login/public/js/qr_login.js:30
+msgid "Refresh QR Code"
+msgstr ""
+
+#: qr_login/public/js/qr_login.js:66
+msgid "Could not generate QR code"
+msgstr ""

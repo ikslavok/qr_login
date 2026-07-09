@@ -16,18 +16,18 @@
 		if ($(".qr-login-section").length) return; // already injected
 
 		var html =
-			'<div class="qr-login-divider"><span>or</span></div>' +
+			'<div class="qr-login-divider"><span>' + __("or") + '</span></div>' +
 			'<div class="qr-login-section">' +
 			'  <div id="qr-login-loading" class="qr-login-loading">' +
-			"    <p>Loading QR code...</p>" +
+			"    <p>" + __("Loading QR code...") + "</p>" +
 			"  </div>" +
 			'  <img id="qr-login-img" style="display:none;" />' +
-			'  <p class="qr-login-label">Scan with mobile app to log in</p>' +
+			'  <p class="qr-login-label">' + __("Scan with mobile app to log in") + '</p>' +
 			'  <p class="qr-login-timer" id="qr-login-timer" style="display:none;">' +
-			'    Expires in <span id="qr-countdown"></span>' +
+			'    ' + __("Expires in") + ' <span id="qr-countdown"></span>' +
 			"  </p>" +
 			'  <button class="btn btn-xs btn-default qr-login-refresh" id="qr-login-refresh" style="display:none;">' +
-			"    Refresh QR Code" +
+			"    " + __("Refresh QR Code") +
 			"  </button>" +
 			"</div>";
 
@@ -63,7 +63,7 @@
 			startCountdown(120);
 			startPolling(data.token);
 		}).catch(function () {
-			$("#qr-login-loading").html("<p>Could not generate QR code</p>");
+			$("#qr-login-loading").html("<p>" + __("Could not generate QR code") + "</p>");
 		});
 	}
 
