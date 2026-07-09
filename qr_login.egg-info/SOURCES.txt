@@ -1,10 +1,12 @@
 MANIFEST.in
+MOBILE_INTEGRATION.md
 requirements.txt
 setup.py
 qr_login/__init__.py
 qr_login/api.py
 qr_login/hooks.py
 qr_login/modules.txt
+qr_login/patches.txt
 qr_login.egg-info/PKG-INFO
 qr_login.egg-info/SOURCES.txt
 qr_login.egg-info/dependency_links.txt
