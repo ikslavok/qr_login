@@ -10,3 +10,9 @@ app_license = "MIT"
 # Inject QR login JS and CSS on the login page (web pages)
 web_include_js = ["/assets/qr_login/js/qr_login.js"]
 web_include_css = ["/assets/qr_login/css/qr_login.css"]
+
+# Killswitch: duration prompt + auto-logout UI on the desk
+app_include_js = ["/assets/qr_login/js/qr_killswitch.js"]
+
+# Enforce killswitch server-side on every request
+auth_hooks = ["qr_login.api.enforce_killswitch"]

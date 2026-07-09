@@ -87,6 +87,9 @@ def confirm_login(token):
 
 	sid = frappe.session.sid
 
+	# Mark this session as QR-born so the desk asks for a killswitch duration
+	frappe.cache.set_value(f"qr_session:{sid}", 1, expires_in_sec=7 * 24 * 3600)
+
 	# Create a one-time login token (Frappe's native pattern)
 	login_token = frappe.generate_hash(length=32)
 	frappe.cache.set_value(f"login_token:{login_token}", sid, expires_in_sec=120)
@@ -105,3 +108,74 @@ def confirm_login(token):
 	frappe.db.commit()
 
 	return {"status": "confirmed", "user": user}
+
+
+# --- Session killswitch (auto-logout timer for QR-born sessions) ---
+
+KILLSWITCH_OPTIONS = (5, 15, 30)  # minutes
+# client needs 5s warning + 10s QR-rescan window after the deadline
+KILLSWITCH_GRACE_SECONDS = 20
+
+
+def _killswitch_key(sid):
+	return f"qr_killswitch:{sid}"
+
+
+@frappe.whitelist(methods=["POST"])
+def killswitch_status():
+	"""State for the current session: is it QR-born, and is a killswitch armed?
+
+	The QR-born marker is consumed on first read, so the chooser is offered
+	exactly once per session — a refresh won't re-prompt.
+	"""
+	sid = frappe.session.sid
+	qr_session = bool(frappe.cache.get_value(f"qr_session:{sid}"))
+	if qr_session:
+		frappe.cache.delete_value(f"qr_session:{sid}")
+	return {
+		"qr_session": qr_session,
+		"deadline": frappe.cache.get_value(_killswitch_key(sid)),
+	}
+
+
+@frappe.whitelist(methods=["POST"])
+def set_killswitch(minutes):
+	"""Arm the killswitch: log this session out `minutes` from now."""
+	import time
+
+	minutes = int(minutes)
+	if minutes not in KILLSWITCH_OPTIONS:
+		frappe.throw(_("Invalid duration"), frappe.ValidationError)
+
+	sid = frappe.session.sid
+	deadline = int(time.time()) + minutes * 60
+	frappe.cache.set_value(
+		_killswitch_key(sid), deadline, expires_in_sec=minutes * 60 + 24 * 3600
+	)
+	# Choice made — don't prompt again on reload
+	frappe.cache.delete_value(f"qr_session:{sid}")
+	return {"deadline": deadline}
+
+
+def enforce_killswitch():
+	"""auth_hooks: reject any request on a session whose killswitch has expired.
+
+	Runs on every authenticated request, costs one cache read for sessions
+	without a killswitch. The grace period keeps the session alive just long
+	enough for the client's 5s warning + 10s QR-rescan window.
+	"""
+	import time
+
+	sid = getattr(frappe.session, "sid", None)
+	if not sid or frappe.session.user in ("", "Guest"):
+		return
+
+	deadline = frappe.cache.get_value(_killswitch_key(sid))
+	if not deadline:
+		return
+
+	if time.time() > int(deadline) + KILLSWITCH_GRACE_SECONDS:
+		frappe.cache.delete_value(_killswitch_key(sid))
+		frappe.local.login_manager.logout()
+		frappe.db.commit()
+		raise frappe.AuthenticationError("Session ended by killswitch")
