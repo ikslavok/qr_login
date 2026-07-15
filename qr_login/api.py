@@ -82,10 +82,26 @@ def confirm_login(token):
 	# Create a new session for the web browser
 	from frappe.auth import LoginManager
 
+	# This request belongs to the phone: login_as() below queues Set-Cookie
+	# headers for the NEW web session on this response, and mobile HTTP stacks
+	# adopt them — after that the phone and the browser share one sid, and the
+	# killswitch (or a browser logout) ends the phone's session too. Snapshot
+	# the phone's session and response cookies, then restore them after.
+	mobile_session = frappe.local.session
+	mobile_session_obj = getattr(frappe.local, "session_obj", None)
+	mobile_cookies = dict(frappe.local.cookie_manager.cookies)
+	mobile_cookies_to_delete = list(frappe.local.cookie_manager.to_delete)
+
 	login_manager = LoginManager()
 	login_manager.login_as(user)
 
 	sid = frappe.session.sid
+
+	frappe.local.session = mobile_session
+	if mobile_session_obj is not None:
+		frappe.local.session_obj = mobile_session_obj
+	frappe.local.cookie_manager.cookies = mobile_cookies
+	frappe.local.cookie_manager.to_delete = mobile_cookies_to_delete
 
 	# Mark this session as QR-born so the desk asks for a killswitch duration
 	frappe.cache.set_value(f"qr_session:{sid}", 1, expires_in_sec=7 * 24 * 3600)
