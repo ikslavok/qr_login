@@ -93,6 +93,9 @@ def confirm_login(token):
 	mobile_cookies_to_delete = list(frappe.local.cookie_manager.to_delete)
 
 	login_manager = LoginManager()
+	# Don't let deny_multiple_sessions evict the phone's own session while
+	# creating the browser session.
+	login_manager.clear_active_sessions = lambda: None
 	login_manager.login_as(user)
 
 	sid = frappe.session.sid
