@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: QR Login VERSION\n"
 "Report-Msgid-Bugs-To: filip@filipilic.com\n"
-"POT-Creation-Date: 2026-02-12 00:00+0000\n"
+"POT-Creation-Date: 2026-09-08 12:44+0000\n"
 "PO-Revision-Date: 2026-02-12 00:00+0000\n"
 "Last-Translator: filip@filipilic.com\n"
 "Language: sr\n"
@@ -18,38 +18,150 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.1\n"
 
-#: qr_login/api.py:46 qr_login/api.py:69
-msgid "Invalid token"
-msgstr "Nevažeći token"
+#. Label of a Check field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Allow users to mark a device as trusted"
+msgstr "Dozvoli korisnicima da označe uređaj kao pouzdan"
 
-#: qr_login/api.py:73
-msgid "QR code has expired. Please scan a new one."
-msgstr "QR kod je istekao. Skenirajte novi."
+#. Label of a Section Break field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Auto Logout"
+msgstr "Automatska odjava"
 
-#: qr_login/api.py:78
-msgid "This QR code has already been used."
-msgstr "Ovaj QR kod je već iskorišćen."
+#: qr_login/public/js/qr_killswitch.js:178
+msgid "Continue in"
+msgstr "Nastavak za"
 
-#: qr_login/public/js/qr_login.js:19
-msgid "or"
-msgstr "ili"
+#: qr_login/public/js/qr_killswitch.js:188
+#: qr_login/public/js/qr_killswitch.js:197
+msgid "Continue session"
+msgstr "Nastavi sesiju"
 
-#: qr_login/public/js/qr_login.js:22
-msgid "Loading QR code..."
-msgstr "Učitavanje QR koda..."
+#: qr_login/public/js/qr_login.js:66
+msgid "Could not generate QR code"
+msgstr "Nije moguće generisati QR kod"
 
-#: qr_login/public/js/qr_login.js:25
-msgid "Scan with mobile app to log in"
-msgstr "Skenirajte mobilnom aplikacijom za prijavu"
+#. Description of the 'Auto Logout' (Section Break) field in DocType 'QR Login
+#. Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Desk sessions created by QR login for these roles are forcibly ended after the given time. The user can only shorten it in the popup. Does not affect the mobile app session."
+msgstr "Sesije nastale QR prijavom za ove role se obavezno gase nakon zadatog vremena. Korisnik u pop-upu može samo da skrati vreme. Ne utiče na sesiju mobilne aplikacije."
+
+#. Label of a Int field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Device stays trusted for (days)"
+msgstr "Uređaj ostaje pouzdan (dana)"
 
 #: qr_login/public/js/qr_login.js:27
 msgid "Expires in"
 msgstr "Ističe za"
 
+#: qr_login/public/js/qr_killswitch.js:177
+msgid "Get your phone ready to continue the session"
+msgstr "Pripremite telefon da nastavite sesiju"
+
+#: qr_login/api.py:183
+msgid "Invalid duration"
+msgstr "Nevažeće trajanje"
+
+#: qr_login/api.py:48 qr_login/api.py:71
+msgid "Invalid token"
+msgstr "Nevažeći token"
+
+#: qr_login/public/js/qr_login.js:22
+msgid "Loading QR code..."
+msgstr "Učitavanje QR koda..."
+
+#: qr_login/public/js/qr_killswitch.js:189
+msgid "Loading code…"
+msgstr "Učitavanje koda…"
+
+#: qr_login/public/js/qr_killswitch.js:94
+msgid "Log me out after:"
+msgstr "Izloguj me nakon:"
+
+#. Label of a Int field in DocType 'QR Login Auto Logout Role'
+#: qr_login/qr_login/doctype/qr_login_auto_logout_role/qr_login_auto_logout_role.json
+msgid "Log out after (min)"
+msgstr "Odjava nakon (min)"
+
+#: qr_login/public/js/qr_killswitch.js:200
+msgid "Logout in"
+msgstr "Odjava za"
+
+#: qr_login/public/js/qr_killswitch.js:126
+msgid "My device – don't log me out"
+msgstr "Moj uređaj – ne odjavljuj me"
+
+#. Description of the 'Allow users to mark a device as trusted' (Check) field
+#. in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "No forced auto logout on a trusted device (e.g. a home computer)."
+msgstr "Na pouzdanom uređaju (npr. kućni računar) nema obavezne automatske odjave."
+
+#. Name of a DocType
+#: qr_login/qr_login/doctype/qr_login_auto_logout_role/qr_login_auto_logout_role.json
+msgid "QR Login Auto Logout Role"
+msgstr "QR prijava – rola za automatsku odjavu"
+
+#. Name of a DocType
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "QR Login Settings"
+msgstr "Podešavanja QR prijave"
+
+#: qr_login/api.py:75
+msgid "QR code has expired. Please scan a new one."
+msgstr "QR kod je istekao. Skenirajte novi."
+
 #: qr_login/public/js/qr_login.js:30
 msgid "Refresh QR Code"
 msgstr "Osvežite QR kod"
 
-#: qr_login/public/js/qr_login.js:66
-msgid "Could not generate QR code"
-msgstr "Nije moguće generisati QR kod"
+#. Label of a Link field in DocType 'QR Login Auto Logout Role'
+#: qr_login/qr_login/doctype/qr_login_auto_logout_role/qr_login_auto_logout_role.json
+msgid "Role"
+msgstr "Rola"
+
+#. Label of a Table field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Roles"
+msgstr "Role"
+
+#: qr_login/public/js/qr_killswitch.js:198
+msgid "Scan the code with your phone to continue"
+msgstr "Skenirajte kod telefonom da nastavite"
+
+#: qr_login/public/js/qr_login.js:25
+msgid "Scan with mobile app to log in"
+msgstr "Skenirajte mobilnom aplikacijom za prijavu"
+
+#: qr_login/public/js/qr_killswitch.js:89
+msgid "Session ends in {0} min"
+msgstr "Sesija ističe za {0} min"
+
+#: qr_login/public/js/qr_killswitch.js:176
+msgid "Session is about to end"
+msgstr "Sesija samo što nije istekla"
+
+#. Name of a role
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "System Manager"
+msgstr ""
+
+#: qr_login/api.py:80
+msgid "This QR code has already been used."
+msgstr "Ovaj QR kod je već iskorišćen."
+
+#. Label of a Section Break field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Trusted Devices"
+msgstr "Pouzdani uređaji"
+
+#: qr_login/api.py:234
+msgid "Trusted devices are disabled"
+msgstr "Pouzdani uređaji su onemogućeni"
+
+#: qr_login/public/js/qr_login.js:19
+msgid "or"
+msgstr "ili"
+
