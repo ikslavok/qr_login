@@ -1,0 +1,61 @@
+{
+ "doctype": "DocType",
+ "name": "QR Login Settings",
+ "module": "QR Login",
+ "issingle": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "auto_logout_section",
+  "auto_logout_roles",
+  "trusted_section",
+  "allow_trusted_devices",
+  "trusted_device_days"
+ ],
+ "fields": [
+  {
+   "fieldname": "auto_logout_section",
+   "fieldtype": "Section Break",
+   "label": "Auto Logout",
+   "description": "Desk sessions created by QR login for these roles are forcibly ended after the given time. The user can only shorten it in the popup. Does not affect the mobile app session."
+  },
+  {
+   "fieldname": "auto_logout_roles",
+   "fieldtype": "Table",
+   "label": "Roles",
+   "options": "QR Login Auto Logout Role"
+  },
+  {
+   "fieldname": "trusted_section",
+   "fieldtype": "Section Break",
+   "label": "Trusted Devices"
+  },
+  {
+   "fieldname": "allow_trusted_devices",
+   "fieldtype": "Check",
+   "label": "Allow users to mark a device as trusted",
+   "default": "1",
+   "description": "No forced auto logout on a trusted device (e.g. a home computer)."
+  },
+  {
+   "fieldname": "trusted_device_days",
+   "fieldtype": "Int",
+   "label": "Device stays trusted for (days)",
+   "default": "90",
+   "depends_on": "allow_trusted_devices",
+   "non_negative": 1
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

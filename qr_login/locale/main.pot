@@ -1,14 +1,14 @@
 # Translations template for QR Login.
 # Copyright (C) 2026 Filip Ilic
 # This file is distributed under the same license as the QR Login project.
-# FIRST AUTHOR <filip@filipilic.com>, 2026.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: QR Login VERSION\n"
 "Report-Msgid-Bugs-To: filip@filipilic.com\n"
-"POT-Creation-Date: 2026-02-12 00:00+0000\n"
-"PO-Revision-Date: 2026-02-12 00:00+0000\n"
+"POT-Creation-Date: 2026-09-08 12:44+0000\n"
+"PO-Revision-Date: 2026-09-08 12:44+0000\n"
 "Last-Translator: filip@filipilic.com\n"
 "Language-Team: filip@filipilic.com\n"
 "MIME-Version: 1.0\n"
@@ -16,38 +16,150 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.1\n"
 
-#: qr_login/api.py:46 qr_login/api.py:69
-msgid "Invalid token"
+#. Label of a Check field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Allow users to mark a device as trusted"
 msgstr ""
 
-#: qr_login/api.py:73
-msgid "QR code has expired. Please scan a new one."
+#. Label of a Section Break field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Auto Logout"
 msgstr ""
 
-#: qr_login/api.py:78
-msgid "This QR code has already been used."
+#: qr_login/public/js/qr_killswitch.js:178
+msgid "Continue in"
 msgstr ""
 
-#: qr_login/public/js/qr_login.js:19
-msgid "or"
+#: qr_login/public/js/qr_killswitch.js:188
+#: qr_login/public/js/qr_killswitch.js:197
+msgid "Continue session"
 msgstr ""
 
-#: qr_login/public/js/qr_login.js:22
-msgid "Loading QR code..."
+#: qr_login/public/js/qr_login.js:66
+msgid "Could not generate QR code"
 msgstr ""
 
-#: qr_login/public/js/qr_login.js:25
-msgid "Scan with mobile app to log in"
+#. Description of the 'Auto Logout' (Section Break) field in DocType 'QR Login
+#. Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Desk sessions created by QR login for these roles are forcibly ended after the given time. The user can only shorten it in the popup. Does not affect the mobile app session."
+msgstr ""
+
+#. Label of a Int field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Device stays trusted for (days)"
 msgstr ""
 
 #: qr_login/public/js/qr_login.js:27
 msgid "Expires in"
 msgstr ""
 
+#: qr_login/public/js/qr_killswitch.js:177
+msgid "Get your phone ready to continue the session"
+msgstr ""
+
+#: qr_login/api.py:183
+msgid "Invalid duration"
+msgstr ""
+
+#: qr_login/api.py:48 qr_login/api.py:71
+msgid "Invalid token"
+msgstr ""
+
+#: qr_login/public/js/qr_login.js:22
+msgid "Loading QR code..."
+msgstr ""
+
+#: qr_login/public/js/qr_killswitch.js:189
+msgid "Loading code…"
+msgstr ""
+
+#: qr_login/public/js/qr_killswitch.js:94
+msgid "Log me out after:"
+msgstr ""
+
+#. Label of a Int field in DocType 'QR Login Auto Logout Role'
+#: qr_login/qr_login/doctype/qr_login_auto_logout_role/qr_login_auto_logout_role.json
+msgid "Log out after (min)"
+msgstr ""
+
+#: qr_login/public/js/qr_killswitch.js:200
+msgid "Logout in"
+msgstr ""
+
+#: qr_login/public/js/qr_killswitch.js:126
+msgid "My device – don't log me out"
+msgstr ""
+
+#. Description of the 'Allow users to mark a device as trusted' (Check) field
+#. in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "No forced auto logout on a trusted device (e.g. a home computer)."
+msgstr ""
+
+#. Name of a DocType
+#: qr_login/qr_login/doctype/qr_login_auto_logout_role/qr_login_auto_logout_role.json
+msgid "QR Login Auto Logout Role"
+msgstr ""
+
+#. Name of a DocType
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "QR Login Settings"
+msgstr ""
+
+#: qr_login/api.py:75
+msgid "QR code has expired. Please scan a new one."
+msgstr ""
+
 #: qr_login/public/js/qr_login.js:30
 msgid "Refresh QR Code"
 msgstr ""
 
-#: qr_login/public/js/qr_login.js:66
-msgid "Could not generate QR code"
+#. Label of a Link field in DocType 'QR Login Auto Logout Role'
+#: qr_login/qr_login/doctype/qr_login_auto_logout_role/qr_login_auto_logout_role.json
+msgid "Role"
 msgstr ""
+
+#. Label of a Table field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Roles"
+msgstr ""
+
+#: qr_login/public/js/qr_killswitch.js:198
+msgid "Scan the code with your phone to continue"
+msgstr ""
+
+#: qr_login/public/js/qr_login.js:25
+msgid "Scan with mobile app to log in"
+msgstr ""
+
+#: qr_login/public/js/qr_killswitch.js:89
+msgid "Session ends in {0} min"
+msgstr ""
+
+#: qr_login/public/js/qr_killswitch.js:176
+msgid "Session is about to end"
+msgstr ""
+
+#. Name of a role
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "System Manager"
+msgstr ""
+
+#: qr_login/api.py:80
+msgid "This QR code has already been used."
+msgstr ""
+
+#. Label of a Section Break field in DocType 'QR Login Settings'
+#: qr_login/qr_login/doctype/qr_login_settings/qr_login_settings.json
+msgid "Trusted Devices"
+msgstr ""
+
+#: qr_login/api.py:234
+msgid "Trusted devices are disabled"
+msgstr ""
+
+#: qr_login/public/js/qr_login.js:19
+msgid "or"
+msgstr ""
+

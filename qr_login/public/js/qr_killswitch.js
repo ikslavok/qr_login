@@ -1,7 +1,9 @@
 // QR session killswitch on the desk.
-// Flow: QR-born session → non-blocking corner panel "izloguj me nakon
-// 5/15/30 min" → near the deadline a big centered modal warns, then shows a
-// large QR to rescan (continues via a fresh QR login) → otherwise logout.
+// Flow: QR-born session → non-blocking corner panel "log me out after
+// 5/15/30 min" (optional; for some roles the server already armed a
+// mandatory deadline and the panel can only shorten it) → near the deadline
+// a big centered modal warns, then shows a large QR to rescan (continues via
+// a fresh QR login) → otherwise logout.
 // Server enforces the deadline via auth_hooks; this script is only the UX.
 // Keep WARNING/RESCAN in sync with KILLSWITCH_GRACE_SECONDS on the server.
 (function () {
@@ -9,6 +11,7 @@
 	var RESCAN_SECONDS = 25; // window to scan the continue-QR after the deadline
 
 	var deadline = null; // epoch ms
+	var canTrust = false; // forced deadline + settings allow "my device"
 	var qrDeadline = null; // epoch ms, rescan window
 	var phase = "idle"; // idle | chooser | armed | warning | qr | done
 	var tickInterval = null;
@@ -23,9 +26,9 @@
 				deadline = s.deadline * 1000;
 				phase = "armed";
 				startTicking();
-			} else {
-				showChooser();
 			}
+			canTrust = !!s.can_trust;
+			if (s.qr_session) showChooser();
 		});
 	});
 
@@ -81,15 +84,21 @@
 	function showChooser() {
 		phase = "chooser";
 		var p = panel();
+		var note = deadline
+			? '<div style="color:var(--text-muted,#8d99a6);margin-bottom:6px;">' +
+			  __("Session ends in {0} min", [Math.round((deadline - Date.now()) / 60000)]) +
+			  "</div>"
+			: "";
 		p.innerHTML =
-			'<div style="margin-bottom:8px;font-weight:600;">Izloguj me nakon:</div>' +
+			note +
+			'<div style="margin-bottom:8px;font-weight:600;">' + __("Log me out after:") + "</div>" +
 			'<div style="display:flex;gap:6px;justify-content:center;"></div>';
 		var row = p.lastChild;
 
-		// auto-dismiss: no choice in 15s -> panel goes away, no killswitch
+		// auto-dismiss: no choice in 15s -> panel goes away; a mandatory deadline stays
 		var dismissTimer = setTimeout(function () {
 			if (phase === "chooser") {
-				phase = "idle";
+				phase = deadline ? "armed" : "idle";
 				removePanel();
 			}
 		}, 15000);
@@ -109,6 +118,23 @@
 			};
 			row.appendChild(b);
 		});
+
+		if (canTrust) {
+			var t = document.createElement("button");
+			t.className = "btn btn-sm btn-default";
+			t.style.cssText = "margin-top:8px;width:100%;";
+			t.textContent = __("My device – don't log me out");
+			t.onclick = function () {
+				clearTimeout(dismissTimer);
+				frappe.xcall("qr_login.api.trust_device").then(function () {
+					cleanup();
+					deadline = null;
+					phase = "idle";
+					removePanel();
+				});
+			};
+			p.appendChild(t);
+		}
 	}
 
 	function startTicking() {
@@ -147,9 +173,9 @@
 		if (!document.getElementById("qr-ks-warn-secs")) {
 			card.innerHTML =
 				'<div style="font-size:44px;margin-bottom:6px;">⏳</div>' +
-				'<div style="font-size:19px;font-weight:700;margin-bottom:6px;">Sesija samo što nije istekla</div>' +
-				'<div style="color:var(--text-muted,#8d99a6);margin-bottom:16px;">Pripremite telefon da nastavite sesiju</div>' +
-				'<div style="font-size:15px;">Nastavak za ' +
+				'<div style="font-size:19px;font-weight:700;margin-bottom:6px;">' + __("Session is about to end") + "</div>" +
+				'<div style="color:var(--text-muted,#8d99a6);margin-bottom:16px;">' + __("Get your phone ready to continue the session") + "</div>" +
+				'<div style="font-size:15px;">' + __("Continue in") + " " +
 				'<span id="qr-ks-warn-secs" style="font-weight:700;font-size:22px;color:var(--primary,#2490ef);"></span></div>';
 		}
 		document.getElementById("qr-ks-warn-secs").textContent = secs + "s";
@@ -159,8 +185,8 @@
 		phase = "qr";
 		var card = modalCard();
 		card.innerHTML =
-			'<div style="font-size:19px;font-weight:700;margin-bottom:4px;">Nastavi sesiju</div>' +
-			'<div style="color:var(--text-muted,#8d99a6);">Učitavanje koda…</div>';
+			'<div style="font-size:19px;font-weight:700;margin-bottom:4px;">' + __("Continue session") + "</div>" +
+			'<div style="color:var(--text-muted,#8d99a6);">' + __("Loading code…") + "</div>";
 
 		frappe
 			.xcall("qr_login.api.generate_token")
@@ -168,10 +194,10 @@
 				if (phase !== "qr" || !data || !data.qr_image) return logout();
 				qrDeadline = Date.now() + RESCAN_SECONDS * 1000;
 				card.innerHTML =
-					'<div style="font-size:19px;font-weight:700;margin-bottom:4px;">Nastavi sesiju</div>' +
-					'<div style="color:var(--text-muted,#8d99a6);margin-bottom:16px;">Skenirajte kod telefonom da nastavite</div>' +
+					'<div style="font-size:19px;font-weight:700;margin-bottom:4px;">' + __("Continue session") + "</div>" +
+					'<div style="color:var(--text-muted,#8d99a6);margin-bottom:16px;">' + __("Scan the code with your phone to continue") + "</div>" +
 					'<img src="' + data.qr_image + '" style="width:260px;height:260px;" />' +
-					'<div style="margin-top:16px;font-size:15px;">Odjava za ' +
+					'<div style="margin-top:16px;font-size:15px;">' + __("Logout in") + " " +
 					'<span id="qr-killswitch-timer" style="font-weight:700;color:var(--red-500,#e24c4c);">' +
 					RESCAN_SECONDS + 's</span></div>';
 				startPolling(data.token);
