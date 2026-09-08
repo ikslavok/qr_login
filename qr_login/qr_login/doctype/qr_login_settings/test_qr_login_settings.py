@@ -52,3 +52,4 @@ def demo():
 		s.save()
 		frappe.db.commit()
 	return "ok"
+

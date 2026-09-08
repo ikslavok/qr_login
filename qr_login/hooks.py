@@ -11,8 +11,15 @@ app_license = "MIT"
 web_include_js = ["/assets/qr_login/js/qr_login.js"]
 web_include_css = ["/assets/qr_login/css/qr_login.css"]
 
-# Killswitch: duration prompt + auto-logout UI on the desk
-app_include_js = ["/assets/qr_login/js/qr_killswitch.js"]
+# Killswitch: duration prompt + auto-logout UI on the desk.
+# Content hash in the URL busts nginx's 1-year asset cache without a bench build.
+import hashlib as _hashlib
+import pathlib as _pathlib
+
+_killswitch_js = _pathlib.Path(__file__).parent / "public" / "js" / "qr_killswitch.js"
+app_include_js = [
+	f"/assets/qr_login/js/qr_killswitch.js?v={_hashlib.md5(_killswitch_js.read_bytes()).hexdigest()[:8]}"
+]
 
 # Enforce killswitch server-side on every request
 auth_hooks = ["qr_login.api.enforce_killswitch"]
